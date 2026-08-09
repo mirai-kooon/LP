@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>募集開始のお知らせ登録｜未来鑑定士コーン</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#FFF8F0;--white:#FFFFFF;--accent:#F5A623;--accent-light:#FFF3E0;
+  --text:#4A3728;--text-light:#8B7355;--text-placeholder:#C4B097;
+  --corn-green:#7CB342;--input-bg:#FFFCF7;--input-border:#E8DFD3;
+  --radius:16px;--shadow:0 4px 24px rgba(74,55,40,.08);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Zen Maru Gothic',sans-serif;
+  background:var(--cream);color:var(--text);line-height:1.8;
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:1.5rem;
+}
+
+.card{
+  background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);
+  max-width:420px;width:100%;padding:2rem 1.5rem;text-align:center;
+  position:relative;overflow:hidden;
+}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--accent),var(--corn-green))}
+
+.card-icon{width:56px;height:56px;border-radius:50%;object-fit:cover;margin-bottom:.5rem;border:2px solid var(--accent-light)}
+.card-name{font-size:.75rem;color:var(--text-light);margin-bottom:1rem;letter-spacing:.08em}
+
+.card-emoji{font-size:1.6rem;margin-bottom:.3rem}
+.card-title{font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
+.card-desc{font-size:.8rem;color:var(--text-light);line-height:1.9;margin-bottom:1.2rem}
+
+.field{margin-bottom:1rem;text-align:left}
+.field-label{font-size:.82rem;font-weight:700;margin-bottom:.3rem}
+.text-input{
+  width:100%;font-family:inherit;font-size:.86rem;color:var(--text);
+  background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:10px;
+  padding:.65rem .85rem;outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.text-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,166,35,.15)}
+.text-input::placeholder{color:var(--text-placeholder)}
+.field-error{color:#E53935;font-size:.72rem;margin-top:.2rem;display:none}
+.field.has-error .field-error{display:block}
+.field.has-error .text-input{border-color:#E53935}
+
+.submit-btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:linear-gradient(135deg,var(--accent),#F7B731);color:#fff;
+  font-family:inherit;font-size:.88rem;font-weight:700;padding:.7rem 2rem;
+  border:none;border-radius:40px;cursor:pointer;margin-top:.5rem;
+  box-shadow:0 4px 16px rgba(245,166,35,.35);transition:transform .15s;
+}
+.submit-btn:hover{transform:translateY(-2px)}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+.note{font-size:.68rem;color:var(--text-light);margin-top:1rem;line-height:1.7}
+
+.back-link{margin-top:1rem}
+.back-link a{font-size:.75rem;color:var(--text-light);text-decoration:none;border-bottom:1px dotted var(--text-light)}
+
+.success{display:none}
+.success.show{display:block}
+.success .card-emoji{font-size:2rem}
+.hide{display:none}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <img src="https://mirai-kooon.github.io/LP/assets/kooonicon.png" alt="コーン" class="card-icon">
+  <div class="card-name">未来鑑定士コーン</div>
+
+  <div id="formArea">
+    <div class="card-emoji">🔔</div>
+    <h1 class="card-title">募集開始のお知らせ登録</h1>
+    <p class="card-desc">
+      本鑑定の次回募集開始を<br>メールでお知らせするよ。<br>
+      ミニ鑑定の時と同じメールアドレスを<br>入力してね。
+    </p>
+
+    <div class="field" id="f-email">
+      <div class="field-label">メールアドレス</div>
+      <input type="email" class="text-input" id="email" placeholder="例：kooon@example.com">
+      <div class="field-error">メールアドレスを入力してね</div>
+    </div>
+
+    <button type="button" class="submit-btn" id="submitBtn" onclick="submitForm()">🌽 登録する</button>
+
+    <p class="note">
+      ※ STORESの「再入荷お知らせ」の方が早く届く場合があります。<br>
+      あわせてご登録いただくのがおすすめです。
+    </p>
+  </div>
+
+  <div id="successArea" class="success">
+    <div class="card-emoji">🌽✨</div>
+    <h2 class="card-title">登録できたよ！</h2>
+    <p class="card-desc">募集開始の時にメールでお知らせするね。<br>楽しみに待っていてね。</p>
+  </div>
+</div>
+
+<div class="back-link">
+  <a href="https://mirai-kooon.github.io/LP/index.html">&larr; コーンのページに戻る</a>
+</div>
+
+<script>
+function submitForm(){
+  document.querySelectorAll('.field').forEach(function(f){f.classList.remove('has-error')});
+  var email=document.getElementById('email').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('f-email').classList.add('has-error');return}
+  var btn=document.getElementById('submitBtn');
+  btn.disabled=true;btn.textContent='登録中...';
+  var fd=new FormData();
+  fd.append('entry.2068651698',email);
+  fetch('https://docs.google.com/forms/d/e/1FAIpQLSfdCXxAAMYS47fL4crEHqIU4OI_wYTq_svBGPzlD8Mz1qSRGA/formResponse',{method:'POST',body:fd,mode:'no-cors'})
+    .then(function(){
+      document.getElementById('formArea').classList.add('hide');
+      document.getElementById('successArea').classList.add('show');
+    })
+    .catch(function(){
+      document.getElementById('formArea').classList.add('hide');
+      document.getElementById('successArea').classList.add('show');
+    });
+}
+</script>
+</body>
+</html>
